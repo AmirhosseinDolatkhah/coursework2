@@ -23,6 +23,10 @@ public class DataFrame {
         return columns.isEmpty() ? 0 : columns.get(0).getSize();
     }
 
+    public int getColumnCount() {
+        return columns.size();
+    }
+
     public String getValue(String columnName, int row) {
         return getColumnByName(columnName).getRowValue(row);
     }
@@ -33,6 +37,20 @@ public class DataFrame {
 
     public void addValue(String columnName, String newValue) {
         getColumnByName(columnName).addRowValue(newValue);
+    }
+
+    public String getValueAt(int row, int col) {
+        return columns.get(col).getRowValue(row);
+    }
+
+    public String[][] getAllCells() {
+        var rowCount = getRowCount();
+        var colCount = getColumnCount();
+        var cells = new String[rowCount][colCount];
+        for (int i = 0; i < rowCount; i++)
+            for (int j = 0; j < colCount; j++)
+                cells[i][j] = getValueAt(i, j);
+        return cells;
     }
 
     private Column getColumnByName(String columnName) {
