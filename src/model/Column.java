@@ -16,6 +16,8 @@ public class Column {
     }
 
     public String getRowValue(int row) {
+        if (row >= rows.size())
+            return null;
         return rows.get(row);
     }
 

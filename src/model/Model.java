@@ -6,9 +6,17 @@ public final class Model {
     private final String pathOfFile;
     private final DataFrame dataFrame;
 
-    public Model(String pathOfFile) throws FileNotFoundException {
+    public Model(String pathOfFile) {
         this.pathOfFile = pathOfFile;
-        dataFrame = DataLoader.loadCSV(pathOfFile);
+        DataFrame dataFrame = new DataFrame();
+        try {
+            dataFrame = DataLoader.loadCSV(pathOfFile);
+        } catch (FileNotFoundException ignore) {}
+        this.dataFrame = dataFrame;
+    }
+
+    public Model() {
+        this(null);
     }
 
     public String[] getColumnModel() {
