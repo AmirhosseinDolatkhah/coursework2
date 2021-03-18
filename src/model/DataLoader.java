@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 public final class DataLoader {
     public static DataFrame loadCSV(String path) throws FileNotFoundException {
+        if (path == null || path.isEmpty())
+            return new DataFrame();
         var dataFrame = new DataFrame();
         var file = new File(path);
         var scanner = new Scanner(file);

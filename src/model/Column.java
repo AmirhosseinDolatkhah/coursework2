@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Column {
     private final String name;
@@ -31,5 +32,16 @@ public class Column {
 
     public String getName() {
         return name;
+    }
+
+    public String[] values() {
+        return rows.toArray(new String[0]);
+    }
+
+    public HashMap<String, Integer> getStatisticalMap() {
+        var res = new HashMap<String, Integer>();
+        for (var r : rows)
+            res.put(r, res.getOrDefault(r, 0) + 1);
+        return res;
     }
 }

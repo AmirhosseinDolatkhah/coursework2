@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,9 +54,13 @@ public class DataFrame {
         return cells;
     }
 
-    private Column getColumnByName(String columnName) {
+    public HashMap<String, Integer> getStatistical(String columnName) {
+        return getColumnByName(columnName).getStatisticalMap();
+    }
+    
+    public Column getColumnByName(String columnName) {
         for (var column : columns)
-            if (column.getName().equals(columnName))
+            if (column.getName().equalsIgnoreCase(columnName))
                 return column;
         throw new RuntimeException("Invalid Column Name.");
     }
