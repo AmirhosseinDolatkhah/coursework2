@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -97,6 +96,38 @@ public abstract class WindowFrame extends MainFrame {
                 repaint();
                 revalidate();
             }
+
+            @Override
+            protected void toJsonState() {
+                var panel = new JPanel(new BorderLayout());
+                var txtArea = new JTextArea();
+                txtArea.setEditable(false);
+                txtArea.setLineWrap(true);
+                txtArea.setText(getJSON(tableState.getSelectedTitle()));
+                var back = new JButton("Back");
+                back.addActionListener(e -> setState("table"));
+                var save = new JButton("Save to File");
+                save.addActionListener(e -> saveJSON(JOptionPane.showInputDialog("Please enter name of file: "), tableState.getSelectedTitle()));
+                var wrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                wrapper.add(back);
+                wrapper.add(save);
+                panel.add(new JScrollPane(txtArea), BorderLayout.CENTER);
+                panel.add(wrapper, BorderLayout.SOUTH);
+                setContentPane(panel);
+                repaint();
+                revalidate();
+                panel.repaint();
+                panel.revalidate();
+                repaint();
+            }
+
+            @Override
+            protected void addJSONAction() {
+                var path = JOptionPane.showInputDialog("Enter name of JSON file");
+                addModel(path);
+                addTable(path);
+                setState("table");
+            }
         };
         addState("table", tableState);
     }
@@ -114,6 +145,14 @@ public abstract class WindowFrame extends MainFrame {
                 setState("table");
                 repaint();
                 revalidate();
+            }
+
+            @Override
+            protected void addJSONAction() {
+                var path = JOptionPane.showInputDialog("Enter name of JSON file");
+                addModel(path);
+                addTable(path);
+                setState("table");
             }
         };
         addState("noTable", noTableState);
@@ -173,4 +212,6 @@ public abstract class WindowFrame extends MainFrame {
     protected abstract String[] getColumns(String name);
     protected abstract List<Integer> getSearchResultIndexes(String tableName, String column, String key);
     protected abstract Map<String, Integer> getStatisticsOf(String tableName, String col);
+    protected abstract String getJSON(String tableName);
+    protected abstract void saveJSON(String path, String tableName);
 }

@@ -13,13 +13,24 @@ public final class Model {
     private DataFrame dataFrame;
     private boolean[] columnVisibility;
 
-    public Model(String pathOfFile) {
+    public Model(String pathOfFile, boolean json) {
         this.pathOfFile = pathOfFile;
-        init();
+        if (!json) {
+            init();
+        } else {
+            try {
+                dataFrame = JSONReader.readFromJSON(pathOfFile);
+                columnVisibility = new boolean[dataFrame.getColumnCount()];
+                for (int i = 0; i < dataFrame.getColumnCount(); i++)
+                    columnVisibility[i] = true;
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException("Not Found json File");
+            }
+        }
     }
 
     public Model() {
-        this(null);
+        this(null, false);
     }
 
     private void init() {
@@ -86,5 +97,9 @@ public final class Model {
     public void setPathOfFile(String pathOfFile) {
         this.pathOfFile = pathOfFile;
         init();
+    }
+
+    public DataFrame getDataFrame() {
+        return dataFrame;
     }
 }

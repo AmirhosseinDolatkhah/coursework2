@@ -28,6 +28,13 @@ public class GraphPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        if (values.size() > 200) {
+            g.setColor(Color.RED);
+            g.setFont(new Font(Font.SANS_SERIF, Font.BOLD | Font.ITALIC, 14));
+            g.drawString("Sorry, Graphing is not possible for this column due to variations", 20, getHeight() / 2);
+            g.dispose();
+            return;
+        }
         g.setColor(Color.DARK_GRAY.darker());
         var width = getWidth();
         var height = getHeight();

@@ -30,6 +30,10 @@ public abstract class TableState extends JPanel {
         wrapper.add(addTable);
         add(wrapper, BorderLayout.SOUTH);
 
+        var addJSON = new JButton("Add .json Table");
+        addJSON.addActionListener(e -> addJSONAction());
+        wrapper.add(addJSON);
+
         var changeView = new JButton("Change Table View");
         wrapper.add(changeView);
         changeView.addActionListener(e -> {
@@ -64,6 +68,10 @@ public abstract class TableState extends JPanel {
         var statistics = new JButton("Statistics and Graphs");
         wrapper.add(statistics);
         statistics.addActionListener(e -> statisticAction(getSelectedTitle()));
+
+        var toJson = new JButton("To JSON Converter");
+        wrapper.add(toJson);
+        toJson.addActionListener(e -> toJsonState());
     }
 
     public CloseableTabbedPane getTabbedPane() {
@@ -84,4 +92,6 @@ public abstract class TableState extends JPanel {
     protected abstract String[] getColumns(String name);
     protected abstract void closeTabAction(String name);
     protected abstract void statisticAction(String name);
+    protected abstract void toJsonState();
+    protected abstract void addJSONAction();
 }

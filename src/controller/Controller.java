@@ -1,11 +1,13 @@
 package controller;
 
 import model.DataFrame;
+import model.JSONWriter;
 import model.Model;
 import view.WindowFrame;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +33,11 @@ public final class Controller {
 
             @Override
             protected void addModel(String fileName) {
-                models.put(fileName, new Model(".\\res\\" + fileName + ".csv"));
+                if (fileName.endsWith(".json")) {
+                    models.put(fileName, new Model(fileName, true));
+                } else {
+                    models.put(fileName, new Model(".\\res\\" + fileName + ".csv", false));
+                }
             }
 
             @Override
@@ -67,6 +73,20 @@ public final class Controller {
             @Override
             protected Map<String, Integer> getStatisticsOf(String tableName, String col) {
                 return models.get(tableName).getStatisticOf(col);
+            }
+
+            @Override
+            protected String getJSON(String tableName) {
+                return JSONWriter.dataFrameToJSON(models.get(tableName).getDataFrame());
+            }
+
+            @Override
+            protected void saveJSON(String path, String tableName) {
+                try {
+                    JSONWriter.dataFrameToJSONFile(models.get(tableName).getDataFrame(), path);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         };
     }
