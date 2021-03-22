@@ -21,7 +21,7 @@ public final class JSONReader {
             if (!isColSet)
                 res.addColumn(new Column(kv[0]));
             try {
-                res.addValue(kv[0], kv[1]);
+                res.addValue(kv[0], kv[1].endsWith(",") ? kv[1].substring(0, kv[1].length() - 1) : kv[1]);
             } catch (Exception ignore) {}
         }
         scanner.close();

@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,36 +10,25 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 public final class Model {
-    private String pathOfFile;
-    private DataFrame dataFrame;
+    private final DataFrame dataFrame;
     private boolean[] columnVisibility;
 
-    public Model(String pathOfFile, boolean json) {
-        this.pathOfFile = pathOfFile;
-        if (!json) {
-            init();
-        } else {
+    public Model(File file) {
+        if (file.getName().endsWith(".csv")) {
             try {
-                dataFrame = JSONReader.readFromJSON(pathOfFile);
-                columnVisibility = new boolean[dataFrame.getColumnCount()];
-                for (int i = 0; i < dataFrame.getColumnCount(); i++)
-                    columnVisibility[i] = true;
+                dataFrame = DataLoader.loadCSV(file.getPath());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException("Not Found csv File");
+            }
+        } else if (file.getName().endsWith(".json")) {
+            try {
+                dataFrame = JSONReader.readFromJSON(file.getPath());
             } catch (FileNotFoundException e) {
                 throw new RuntimeException("Not Found json File");
             }
+        } else {
+            throw new RuntimeException("Not appropriate format");
         }
-    }
-
-    public Model() {
-        this(null, false);
-    }
-
-    private void init() {
-        DataFrame dataFrame = new DataFrame();
-        try {
-            dataFrame = DataLoader.loadCSV(pathOfFile);
-        } catch (FileNotFoundException ignore) {}
-        this.dataFrame = dataFrame;
         columnVisibility = new boolean[dataFrame.getColumnCount()];
         for (int i = 0; i < dataFrame.getColumnCount(); i++)
             columnVisibility[i] = true;
@@ -88,15 +78,6 @@ public final class Model {
 
     public HashMap<String, Integer> getStatisticOf(String columnName) {
         return dataFrame.getStatistical(columnName);
-    }
-
-    public String getPathOfFile() {
-        return pathOfFile;
-    }
-
-    public void setPathOfFile(String pathOfFile) {
-        this.pathOfFile = pathOfFile;
-        init();
     }
 
     public DataFrame getDataFrame() {

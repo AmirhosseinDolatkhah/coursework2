@@ -26,7 +26,7 @@ public abstract class StatisticsState extends JPanel {
         gp = new GraphPanel(tableName + ": " + cols[0], getStatisticsOf(tableName, cols[0]));
         for (var s : cols)
             columns.addItem(s);
-        add(gp, BorderLayout.CENTER);
+        add(new JScrollPane(gp), BorderLayout.CENTER);
 
         var wrapper2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         wrapper2.add(columns);

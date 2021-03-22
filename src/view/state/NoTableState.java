@@ -16,13 +16,8 @@ public abstract class NoTableState extends JPanel {
         var p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         p.add(addTable);
         add(p, BorderLayout.SOUTH);
-        add(new JLabel("Please add a .csv file", SwingConstants.CENTER));
-
-        var addJSON = new JButton("Add .json file");
-        addJSON.addActionListener(e -> addJSONAction());
-        p.add(addJSON);
+        add(new JLabel("Please add a .csv or .json file", SwingConstants.CENTER));
     }
 
     protected abstract void addTableAction();
-    protected abstract void addJSONAction();
 }

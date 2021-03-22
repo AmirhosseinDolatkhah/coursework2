@@ -24,15 +24,11 @@ public abstract class TableState extends JPanel {
                 noTabAction();
         });
         add(tabbedPane.get(), BorderLayout.CENTER);
-        var addTable = new JButton("Add New .csv File");
+        var addTable = new JButton("Add New Table");
         addTable.addActionListener(e -> addTableAction());
         var wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
         wrapper.add(addTable);
         add(wrapper, BorderLayout.SOUTH);
-
-        var addJSON = new JButton("Add .json Table");
-        addJSON.addActionListener(e -> addJSONAction());
-        wrapper.add(addJSON);
 
         var changeView = new JButton("Change Table View");
         wrapper.add(changeView);
@@ -93,5 +89,4 @@ public abstract class TableState extends JPanel {
     protected abstract void closeTabAction(String name);
     protected abstract void statisticAction(String name);
     protected abstract void toJsonState();
-    protected abstract void addJSONAction();
 }

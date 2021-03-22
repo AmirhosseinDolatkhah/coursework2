@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +38,9 @@ public abstract class WindowFrame extends MainFrame {
 
             @Override
             protected void addTableAction() {
-                var path = JOptionPane.showInputDialog("Enter name of CSV file");
-                addModel(path);
-                addTable(path);
+                var f = chooseFileHandler();
+                addModel(f);
+                addTable(f.getName());
                 repaint();
                 revalidate();
             }
@@ -120,14 +121,6 @@ public abstract class WindowFrame extends MainFrame {
                 panel.revalidate();
                 repaint();
             }
-
-            @Override
-            protected void addJSONAction() {
-                var path = JOptionPane.showInputDialog("Enter name of JSON file");
-                addModel(path);
-                addTable(path);
-                setState("table");
-            }
         };
         addState("table", tableState);
     }
@@ -137,25 +130,25 @@ public abstract class WindowFrame extends MainFrame {
         JPanel noTableState = new NoTableState() {
             @Override
             protected void addTableAction() {
-                var path = JOptionPane.showInputDialog("Enter name of CSV file");
-                addModel(path);
-                if (getRowModel(path).length == 0)
+                var f = chooseFileHandler();
+                addModel(f);
+                if (getRowModel(f.getName()).length == 0)
                     return;
-                addTable(path);
+                addTable(f.getName());
                 setState("table");
                 repaint();
                 revalidate();
             }
-
-            @Override
-            protected void addJSONAction() {
-                var path = JOptionPane.showInputDialog("Enter name of JSON file");
-                addModel(path);
-                addTable(path);
-                setState("table");
-            }
         };
         addState("noTable", noTableState);
+    }
+
+    private File chooseFileHandler() {
+        var fileChooser = new JFileChooser(".\\");
+        fileChooser.setDialogTitle("Choose a .csv or .json file");
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.showDialog(this, "Select");
+        return fileChooser.getSelectedFile();
     }
 
     private void addTable(String name) {
@@ -181,6 +174,7 @@ public abstract class WindowFrame extends MainFrame {
         wrapper.add(columns, BorderLayout.WEST);
         wrapper.add(txtField, BorderLayout.CENTER);
         var indexResult = new JComboBox<Integer>();
+        var label = new JLabel("========> Search Result Indexes: ", JLabel.RIGHT);
         txtField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -190,10 +184,17 @@ public abstract class WindowFrame extends MainFrame {
                 var sr = getSearchResultIndexes(name, (String) columns.getSelectedItem(), txtField.getText());
                 for (var i : sr)
                     indexResult.addItem(i);
+                label.setText("========> Search Result Indexes (" + sr.size() + " Items are found): ");
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (txtField.getText().trim().isEmpty())
+                    label.setText("========> Search Result Indexes: ");
             }
         });
         var innerWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        innerWrapper.add(new JLabel("Indexes: ", JLabel.RIGHT));
+        innerWrapper.add(label);
         innerWrapper.add(indexResult);
         wrapper.add(innerWrapper, BorderLayout.EAST);
         var outerWrapper = new JPanel(new BorderLayout());
@@ -204,8 +205,7 @@ public abstract class WindowFrame extends MainFrame {
 
     protected abstract String[] getColumnModel(String name);
     protected abstract String[][] getRowModel(String name);
-    protected abstract void addModel(String fileName);
-    protected abstract int getModelCount();
+    protected abstract void addModel(File file);
     protected abstract void removeModel(String name);
     protected abstract boolean[] getColVisibility(String name);
     protected abstract void setColVisibility(String name, boolean[] visibility);

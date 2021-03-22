@@ -1,14 +1,12 @@
 package controller;
 
-import model.DataFrame;
 import model.JSONWriter;
 import model.Model;
 import view.WindowFrame;
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,17 +30,8 @@ public final class Controller {
             }
 
             @Override
-            protected void addModel(String fileName) {
-                if (fileName.endsWith(".json")) {
-                    models.put(fileName, new Model(fileName, true));
-                } else {
-                    models.put(fileName, new Model(".\\res\\" + fileName + ".csv", false));
-                }
-            }
-
-            @Override
-            protected int getModelCount() {
-                return models.size();
+            protected void addModel(File file) {
+                models.put(file.getName(), new Model(file));
             }
 
             @Override
